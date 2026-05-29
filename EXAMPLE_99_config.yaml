@@ -1,0 +1,16 @@
+network:
+  version: 2
+  ethernets:
+    eth0:
+      dhcp4: no
+      dhcp6: no
+    enx3c18a0d52e65:
+      dhcp4: no
+      dhcp6: no
+  bridges:
+    br0:
+      dhcp4: yes
+      dhcp6: yes
+      interfaces:
+        - eth0
+        - enx3c18a0d52e65
