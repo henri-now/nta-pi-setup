@@ -5,6 +5,7 @@
 # USAGE: install.sh TARGET [-i IMAGE] [-u FILE-USER-DATA] [-m FILE-META-DATA]
 # TARGET should be a block device
 # IMAGE is automatically downloaded if omitted
+# This is a fairly fragile script only expected to work with images of Ubuntu Server 24
 #####################################
 
 
