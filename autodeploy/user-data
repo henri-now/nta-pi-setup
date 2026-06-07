@@ -12,8 +12,6 @@
 # Some additional examples are provided in comments below the default
 # configuration.
 
-# On first boot, set the (default) ubuntu user's password to "ubuntu" and
-# expire user passwords
 chpasswd:
   expire: false
   users:
@@ -37,10 +35,12 @@ timezone: Europe/Berlin
 enable_ssh: true
 ssh_pwauth: true
 
-manage_etc_hosts: true
+manage_etc_hosts: localhost
 
 packages:
 - avahi-daemon
+- tcpdump
+- tailscale
 
 apt:
   preserve_sources_list: true
@@ -52,3 +52,26 @@ apt:
 runcmd:
   - [ rfkill, unblock, wifi ]
   - [ sh, -c, "for f in /var/lib/systemd/rfkill/*:wlan; do echo 0 > \"$f\"; done" ]
+  # Set Ethernet speed
+
+autoinstall:
+  version: 1
+  network:
+    version: 2
+    renderer: networkd
+    ethernets:
+      eth0:
+        dhcp4: no
+        dhcp6: no
+      # Hard coded USB to Ethernet adapter, might change if different adapter is used
+      enx3c18a0d52e65:
+        dhcp4: no
+        dhcp6: no
+    bridges:
+      br0:
+        dhcp4: yes
+        dhcp6: yes
+        # Hard coded USB to Ethernet adapter, might change if different adapter is used
+        interfaces:
+          - eth0
+          - enx3c18a0d52e65
