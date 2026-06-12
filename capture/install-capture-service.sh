@@ -1,13 +1,14 @@
 #!/bin/bash
-
 #####################################
 # Installs the tcpdump capture service.
 #   - captures on the given NIC (e.g. enx3c18a0d52e65)
-#   - all traffic, size-rotated at 50 MB/file, no auto-overwrite
-#   - tied to that NIC: capture starts when the NIC is present and
-#     stops when it is unplugged (BindsTo the NIC's .device unit)
+#   - all traffic, size-rotated at 50 MB/file, never overwritten
+#   - runs continuously, enabled at boot; idles when the cable is unplugged
+#
+# Storage management is handled by a separate script.
+#
 # USAGE: sudo ./install-capture-service.sh NIC
-#   NIC   the USB NIC interface name (e.g. enx3c18a0d52e65 or eth1)
+#   NIC   the NIC interface name (e.g. enx3c18a0d52e65 or eth1)
 #####################################
 set -euo pipefail
 
@@ -29,21 +30,16 @@ if ! command -v tcpdump >/dev/null 2>&1; then
 fi
 
 if ! ip link show "$NIC" >/dev/null 2>&1; then
-    echo "WARNING: interface '$NIC' not currently present; service will start when it appears" >&2
+    echo "WARNING: interface '$NIC' not currently present" >&2
 fi
 
 mkdir -p /var/captures
 
-# systemd .device unit for the NIC (name derived from the interface name)
-NIC_DEVICE="sys-subsystem-net-devices-${NIC}.device"
-
 cat > /etc/systemd/system/capture.service <<EOF
 [Unit]
-Description=tcpdump packet capture on ${NIC} (tied to ${NIC} presence)
-# capture is bound to the NIC existing: starts when it appears,
-# stops when it is unplugged
-After=${NIC_DEVICE}
-BindsTo=${NIC_DEVICE}
+Description=tcpdump packet capture on ${NIC}
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=exec
@@ -53,23 +49,18 @@ Restart=on-failure
 RestartSec=5
 
 [Install]
-# started when the NIC appears
-WantedBy=${NIC_DEVICE}
+WantedBy=multi-user.target
 EOF
 
 systemctl daemon-reload
-systemctl enable capture.service
-
-# start now if the NIC is already present
-if systemctl --quiet is-active "${NIC_DEVICE}" 2>/dev/null; then
-    systemctl start capture.service
-fi
+systemctl enable --now capture.service
 
 echo
 echo "Installed capture.service:"
 echo "  interface : ${NIC}"
-echo "  files     : /var/captures, 50 MB each, no auto-overwrite"
-echo "  trigger   : starts with NIC '${NIC}', stops when unplugged"
+echo "  files     : /var/captures, 50 MB each, never overwritten"
+echo "  runs continuously, enabled at boot (idles when cable unplugged)"
 echo
 echo "Status: systemctl status capture.service"
 echo "Logs:   journalctl -u capture.service -f"
+echo "Files:  ls -lh /var/captures"
