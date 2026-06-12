@@ -1,8 +1,13 @@
 #!/bin/bash
 
 #####################################
+# Installs the tcpdump capture service.
+#   - captures on the given NIC (e.g. enx3c18a0d52e65)
+#   - all traffic, size-rotated at 50 MB/file, no auto-overwrite
+#   - tied to that NIC: capture starts when the NIC is present and
+#     stops when it is unplugged (BindsTo the NIC's .device unit)
 # USAGE: sudo ./install-capture-service.sh NIC
-#   NIC   the USB NIC interface name (e.g. enx3c18a0d52e65)
+#   NIC   the USB NIC interface name (e.g. enx3c18a0d52e65 or eth1)
 #####################################
 set -euo pipefail
 
@@ -43,7 +48,7 @@ BindsTo=${NIC_DEVICE}
 [Service]
 Type=exec
 ExecStartPre=/usr/bin/mkdir -p /var/captures
-ExecStart=/usr/bin/tcpdump -i ${NIC} -n -C 50 -w /var/captures/cap-%%Y%%m%%d-%%H%%M%%S.pcap -Z root
+ExecStart=/usr/bin/tcpdump -i ${NIC} -n -C 50 -w /var/captures/cap.pcap -Z root
 Restart=on-failure
 RestartSec=5
 
