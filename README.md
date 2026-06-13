@@ -12,3 +12,8 @@ Run `deploy.sh` (first, make deploy.sh executable, choose your image target):
 sudo chmod +x deploy.sh
 sudo ./deploy.sh /dev/sdd -u user-data
 ```
+## Packet capture
+Check traffic on USB NIC (Network Interface Card):
+```
+sudo tcpdump -i enx3c18a0d52e65 -n -q
+```
