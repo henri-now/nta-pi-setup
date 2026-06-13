@@ -19,3 +19,6 @@ Check traffic on USB NIC (Network Interface Card):
 ```
 sudo tcpdump -i enx3c18a0d52e65 -n -q
 ```
+
+## Note
+Portions of this repo were written with AI assistance and reviewed by me.
