@@ -119,10 +119,3 @@ sudo /opt/capture-led-venv/bin/python3 your-script.py
 - **PWM path needs root**; libraries live in the venv → use the full
   `/opt/capture-led-venv/bin/python3` path with sudo.
 - **Don't name the script `neopixel.py`.**
-
-## Alternative path (not used)
-
-Driving the pixels over **SPI** (data on pin 19 / GPIO10, library
-`adafruit-circuitpython-neopixel-spi`) avoids needing root, avoids disabling
-audio, and avoids the RPi.GPIO/Blinka friction. Kept here as a fallback if the
-PWM path ever causes trouble.
