@@ -52,7 +52,15 @@ apt:
 runcmd:
   - [ rfkill, unblock, wifi ]
   - [ sh, -c, "for f in /var/lib/systemd/rfkill/*:wlan; do echo 0 > \"$f\"; done" ]
-  # Set Ethernet speed
+
+# Set Ethernet speed
+write_files:
+- path: /etc/networkd-dispatcher/configured.d/ethspeed
+  owner: 'root:root'
+  permissions: '0744'
+  content: |
+    #!/bin/sh
+    [ ! "$IFACE" == "eth0" ] && ethtool -s "$IFACE" speed 100 duplex full autoneg off
 
 autoinstall:
   version: 1
