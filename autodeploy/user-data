@@ -68,18 +68,13 @@ autoinstall:
     version: 2
     renderer: networkd
     ethernets:
-      eth0:
-        dhcp4: no
-        dhcp6: no
-      # Hard coded USB to Ethernet adapter, might change if different adapter is used
-      enx3c18a0d52e65:
+      nics:
+        match:
+          name: e*
         dhcp4: no
         dhcp6: no
     bridges:
       br0:
         dhcp4: yes
         dhcp6: yes
-        # Hard coded USB to Ethernet adapter, might change if different adapter is used
-        interfaces:
-          - eth0
-          - enx3c18a0d52e65
+        interfaces: [nics]
