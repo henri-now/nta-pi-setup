@@ -1,5 +1,7 @@
 # nta-pi-setup
-Configure a Raspberry Pi running Ubuntu 24.04 LTS as an IoT-device network-traffic capture node
+Configure a Raspberry Pi running Ubuntu 24.04 LTS as an IoT-device network-traffic capture node<br>
+Connection topology:<br>
+Solar inverter <---> USB Ethernet Adapter <-> Raspberry Pi <---> LAN / Router
 
 ## Autodeploy
 (currently only works on Linux)<br><br>
