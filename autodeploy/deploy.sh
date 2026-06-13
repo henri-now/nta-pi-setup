@@ -49,10 +49,10 @@ if [ -z "$BOOTPART" ]; then
 fi
 TEMPDIR=$(mktemp -d)
 SCRIPTDIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-if [ -z "$USERFILE"]; then
+if [ -z "$USERFILE" ]; then
     USERFILE="${SCRIPTDIR}/user-data"
 fi
-if [ -z "$METAFILE"]; then
+if [ -z "$METAFILE" ]; then
     METAFILE="${SCRIPTDIR}/meta-data"
 fi
 
