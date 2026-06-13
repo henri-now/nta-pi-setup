@@ -4,6 +4,8 @@
 #   - captures on the given NIC (e.g. enx3c18a0d52e65)
 #   - all traffic, size-rotated at 50 MB/file, never overwritten
 #   - runs continuously, enabled at boot; idles when the cable is unplugged
+#   - each service start uses a unique base filename (epoch seconds), so a
+#     restart/reboot never reopens and truncates a previous file
 #
 # Storage management is handled by a separate script.
 #
@@ -35,6 +37,8 @@ fi
 
 mkdir -p /var/captures
 
+# Each run writes cap-YYYYMMDD-HHMMSS.pcap (+ counter suffixes from -C). Because the
+# base name is unique per start, a restart can never truncate a prior file.
 cat > /etc/systemd/system/capture.service <<EOF
 [Unit]
 Description=tcpdump packet capture on ${NIC}
@@ -44,7 +48,7 @@ Wants=network-online.target
 [Service]
 Type=exec
 ExecStartPre=/usr/bin/mkdir -p /var/captures
-ExecStart=/usr/bin/tcpdump -i ${NIC} -n -C 50 -w /var/captures/cap.pcap -Z root
+ExecStart=/bin/sh -c '/usr/bin/tcpdump -i ${NIC} -n -C 50 -w /var/captures/cap-\$(date +%%Y%%m%%d-%%H%%M%%S).pcap -Z root'
 Restart=on-failure
 RestartSec=5
 
@@ -58,8 +62,9 @@ systemctl enable --now capture.service
 echo
 echo "Installed capture.service:"
 echo "  interface : ${NIC}"
-echo "  files     : /var/captures, 50 MB each, never overwritten"
+echo "  files     : /var/captures/cap-YYYYMMDD-HHMMSS.pcap, 50 MB each, never overwritten"
 echo "  runs continuously, enabled at boot (idles when cable unplugged)"
+echo "  unique timestamped name per start -> restarts never truncate prior captures"
 echo
 echo "Status: systemctl status capture.service"
 echo "Logs:   journalctl -u capture.service -f"
