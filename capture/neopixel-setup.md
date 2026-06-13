@@ -56,7 +56,7 @@ sudo python3 -m venv /opt/capture-led-venv
 sudo /opt/capture-led-venv/bin/pip install rpi_ws281x adafruit-circuitpython-neopixel
 ```
 
-### The RPi.GPIO fix (the gotcha)
+### The RPi.GPIO fix
 
 Blinka's GPIO18 backend imports `RPi.GPIO`, which is missing / broken on
 Ubuntu + recent kernels. Install the modern drop-in replacement:
