@@ -106,16 +106,3 @@ sudo /opt/capture-led-venv/bin/python3 your-script.py
 
 > Note: don't name your script `neopixel.py` — it shadows the `neopixel`
 > library and breaks the import.
-
----
-
-## Key gotchas (summary)
-
-- **Missing `noble-updates`** in apt sources caused the whole `zlib1g-dev` /
-  `bzip2` / `build-essential` failure cascade.
-- **rpi_ws281x compiles from source** → needs `build-essential` + `python3-dev`.
-- **`RPi.GPIO` missing on Ubuntu** → install `rpi-lgpio` as the drop-in.
-- **GPIO18 needs audio disabled** or NeoPixel calls segfault.
-- **PWM path needs root**; libraries live in the venv → use the full
-  `/opt/capture-led-venv/bin/python3` path with sudo.
-- **Don't name the script `neopixel.py`.**
