@@ -85,15 +85,13 @@ Then reboot:
 sudo reboot
 ```
 
-## 6. Wiring (Pi 4/3/Zero 2)
+## 6. Wiring (Pi 3/)
 
 | NeoPixel | Pi header        |
 |----------|------------------|
 | 5V / VCC | pin 2  (5V)      |
 | GND      | pin 6  (GND)     |
-| DIN      | pin 12 (GPIO18)  — via ~330 ohm series resistor |
-
-Keep brightness low in software so the Pi's 5V rail isn't stressed.
+| DIN      | pin 12 (GPIO18)  |
 
 ## 7. Run
 
