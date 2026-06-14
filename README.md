@@ -42,12 +42,18 @@ Check if services are online:
 ```
 systemctl list-units 'capture*' 'diskclean*
 ```
+
 Check timer for diskclean:
 ```
 systemctl list-timers diskclean.timer
 ```
 
-
+Service / timer logs:
+```
+journalctl -u capture.service -f
+journalctl -u capture-leds.service -f
+journalctl -u diskclean.service -f
+```
 
 ### Packet capture
 Check traffic on USB NIC (Network Interface Card):
