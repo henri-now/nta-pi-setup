@@ -20,5 +20,11 @@ Check traffic on USB NIC (Network Interface Card):
 sudo tcpdump -i enx3c18a0d52e65 -n -q
 ```
 
+## Neopixel indicator
+Check if Neopixel LEDs are working:
+```
+sudo /opt/capture-led-venv/bin/python3 capture-led-test.py
+```
+
 ## Note
 Portions of this repo were written with AI assistance and reviewed by me.
