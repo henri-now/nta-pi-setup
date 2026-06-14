@@ -21,6 +21,8 @@ sudo tcpdump -i enx3c18a0d52e65 -n -q
 ```
 
 ## Neopixel indicator
+Follow the setup: [NeoPixel setup notes](neopixel-setup.md)
+
 Check if Neopixel LEDs are working:
 ```
 sudo /opt/capture-led-venv/bin/python3 capture-led-test.py
