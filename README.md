@@ -1,5 +1,5 @@
 # nta-pi-setup
-Configure a Raspberry Pi running Ubuntu 24.04 LTS as an IoT-device network-traffic capture node. A Raspberry Pi acts as a transparent network bridge between a solar inverter and the home network, passively capturing all traffic for later research and analysis.
+A Raspberry Pi acts as a transparent network bridge between a solar inverter and the home network, passively capturing all traffic for later research and analysis.
 
 ## Connection topology:<br>
 Solar inverter <---> USB Ethernet Adapter <-> Raspberry Pi <---> LAN / Router
