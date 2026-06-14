@@ -26,7 +26,30 @@ Run `deploy.sh` (first, make deploy.sh executable, choose your image target):
 sudo chmod +x deploy.sh
 sudo ./deploy.sh /dev/sdd -u user-data
 ```
-## Packet capture
+## Services
+The capture nodes runs 3 services / timers:
+```
+UNIT                 LOAD   ACTIVE SUB     DESCRIPTION
+capture-leds.service loaded active running NeoPixel status indicator for tcpdump capture
+capture.service      loaded active running tcpdump packet capture on enx3c18a0d52e65
+diskclean.timer      loaded active waiting Run diskclean periodically
+```
+- `capture-leds.service` only runs the LED indicator. Tt continously checks three things: whether the capture service is alive, the link state of the USB NIC and the size of the folder where the pcap's are saved. If the folder has grown since the last check, a packet was captured and written to a pcap and the LED turns green.
+- `capture.service` starts / restarts the tcpdump process. Tcpdump saves files with a size of 50 MB to `/var/captures`.
+- `diskclean.timer` This timer triggers `diskclean.service` every 15 min to check if the size of `/var/captures` exceeds a set threshold (default 30 GB). If this is the case, the oldest files in `/var/captures` are deleted until the size of the folder is back under the threshold.
+
+Check if services are online:
+```
+systemctl list-units 'capture*' 'diskclean*
+```
+Check timer for diskclean:
+```
+systemctl list-timers diskclean.timer
+```
+
+
+
+### Packet capture
 Check traffic on USB NIC (Network Interface Card):
 ```
 sudo tcpdump -i enx3c18a0d52e65 -n -q
