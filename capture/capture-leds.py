@@ -1,16 +1,9 @@
 #!/usr/bin/env python3
-# Two NeoPixels on GPIO18 show capture health:
-#   green  = receiving        (file grew within GRACE seconds)
-#   yellow = ready/idle        (service running, link up, but no growth for GRACE s)
-#   red    = problem           (service stopped/crashed, OR NIC link down)
-# Passive: reads file sizes, systemd state, and the NIC carrier flag.
-# Never touches tcpdump.
-#
-# NIC name comes from /etc/default/capture (CAPTURE_NIC), the same file the
-# capture service uses. Provide it via EnvironmentFile in the unit, or it
-# falls back to reading the file directly.
-#
-# Wiring: 5V->pin2, GND->pin6, DIN->pin12 (GPIO18). Run as root.
+
+# Two Neopixels on GPIO18 show capture health:
+# green = receiving
+# yellow = ready/idle
+# red = problem
 
 import os, glob, time, subprocess
 import board, neopixel
@@ -18,8 +11,8 @@ import board, neopixel
 CAPTURE_DIR = "/var/captures"
 PCAP_GLOB = "cap-*.pcap*"
 SERVICE = "capture.service"
-INTERVAL = 1.0            # check interval (seconds)
-GRACE = 10.0              # seconds without growth before dropping from green
+INTERVAL = 1.0 # check interval (seconds)
+GRACE = 10.0 # seconds without growth before dropping from green
 
 
 def get_nic():

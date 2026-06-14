@@ -9,8 +9,8 @@ DIR="/var/captures"
 # Abort if the folder doesn't exist (catches typos / unmounted card)
 [ -d "$DIR" ] || { echo "DIR not found: $DIR" >&2; exit 1; }
 
-# Maximum folder size in MiB before cleanup starts (40 GiB = 40 * 1024)
-THRESHOLD=40960
+# Maximum folder size in MiB before cleanup starts (30 GiB = 30 * 1024)
+THRESHOLD=30720
 
 # Return the current folder size as a bare integer in MiB
 # du -sBM = summarize total size in MiB blocks, output like "38000M  /var/captures"
@@ -37,7 +37,7 @@ while [ "$(usage)" -ge "$THRESHOLD" ]; do
     rm -f "$oldest"
     deleted=$((deleted + 1))
 
-    # Print the deletion; oneshot stdout goes to the journal under the unit
+    # Print the deletion
     # View with: journalctl -u diskclean.service
     echo "deleted $oldest"
 done

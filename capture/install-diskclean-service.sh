@@ -8,16 +8,16 @@ set -euo pipefail
 # Must be root to write to /usr/local/bin and /etc/systemd/system
 [ "$(id -u)" -eq 0 ] || { echo "Run as root (sudo ./install.sh)" >&2; exit 1; }
 
-# Directory this installer lives in, so we can find diskclean.sh next to it
+# Directory this installer is in
 SRC_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# Make sure the script we're about to install actually exists
+# Check if diskclean.sh even exists
 [ -f "$SRC_DIR/diskclean.sh" ] || { echo "diskclean.sh not found in $SRC_DIR" >&2; exit 1; }
 
 # Install the cleanup script and make it executable
 install -m 755 "$SRC_DIR/diskclean.sh" /usr/local/bin/diskclean.sh
 
-# Write the service unit (what to run)
+# Write the service unit
 cat > /etc/systemd/system/diskclean.service << 'EOF'
 [Unit]
 Description=Delete oldest files when folder size exceeds threshold
@@ -27,7 +27,7 @@ Type=oneshot
 ExecStart=/usr/local/bin/diskclean.sh
 EOF
 
-# Write the timer unit (when to run it)
+# Write the timer unit
 cat > /etc/systemd/system/diskclean.timer << 'EOF'
 [Unit]
 Description=Run diskclean periodically

@@ -1,19 +1,14 @@
 #!/bin/bash
-#####################################
+
 # Installs the tcpdump capture service.
-#   - captures on the given NIC (e.g. enx3c18a0d52e65)
-#   - all traffic, size-rotated at 50 MB/file, never overwritten
-#   - runs continuously, enabled at boot; idles when the cable is unplugged
-#   - each service start uses a unique base filename (timestamp), so a
-#     restart/reboot never reopens and truncates a previous file
-#   - writes the NIC name to /etc/default/capture as CAPTURE_NIC, the single
-#     source of truth shared with other services (e.g. the LED indicator)
-#
-# Storage management is handled by a separate script.
-#
+# - captures on the given NIC (e.g. enx3c18a0d52e65)
+# - all traffic, size-rotated at 50 MB/file, never overwritten
+# - runs continuously, enabled at boot; idles when the cable is unplugged
+# - writes the NIC name to /etc/default/capture as CAPTURE_NIC, shared with other services (e.g. the LED indicator)
 # USAGE: sudo ./install-capture-service.sh NIC
-#   NIC   the NIC interface name (e.g. enx3c18a0d52e65 or eth1)
-#####################################
+#   NIC   the NIC interface name (e.g. enx3c18a0d52e65)
+
+
 set -euo pipefail
 if [ "$(id -u)" -ne 0 ]; then
     echo "ERROR: must run as root (use sudo)" >&2
@@ -34,11 +29,11 @@ if ! ip link show "$NIC" >/dev/null 2>&1; then
 fi
 mkdir -p /var/captures
 
-# Single source of truth for the capture interface, shared by all services.
+# Write name of USB NIC to variable
 echo "CAPTURE_NIC=${NIC}" > /etc/default/capture
 
 # Each run writes cap-YYYYMMDD-HHMMSS.pcap (+ counter suffixes from -C). Because the
-# base name is unique per start, a restart can never truncate a prior file.
+# base name is unique per start, a restart can never override a prior file.
 cat > /etc/systemd/system/capture.service <<UNIT
 [Unit]
 Description=tcpdump packet capture on ${NIC}

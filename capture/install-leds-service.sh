@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
+
 # Installs the capture-leds NeoPixel status service.
 # Run with: sudo ./install-leds-service.sh
 # Reads the capture NIC from /etc/default/capture (written by the capture
-# installer). Assumes venv at /opt/capture-led-venv with the NeoPixel libs.
+# installer). Assumes venv at /opt/capture-led-venv with the Neopixel libs.
+
 set -euo pipefail
 [ "$(id -u)" -eq 0 ] || { echo "Run as root (sudo)" >&2; exit 1; }
 
