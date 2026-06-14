@@ -29,4 +29,6 @@ sudo /opt/capture-led-venv/bin/python3 capture-led-test.py
 ```
 
 ## Note
-Portions of this repo were written with AI assistance and manually reviewed.
+The code and documentation in this repository were written with AI
+assistance and manually reviewed and tested. The associated paper
+was written without AI assistance.
