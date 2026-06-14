@@ -2,10 +2,16 @@
 Configure a Raspberry Pi running Ubuntu 24.04 LTS as an IoT-device network-traffic capture node<br>
 
 ## Connection topology:<br>
-Solar inverter <---> USB Ethernet Adapter <-> Raspberry Pi <---> LAN / Router <br><br>
+Solar inverter <---> USB Ethernet Adapter <-> Raspberry Pi <---> LAN / Router
 
-LED indicator meanings:
-- Red: No ethernet cable connected or capture service is not running / crashed. Connecting the hardware or power-cycling should fix the issue.
+## Quick start
+- Connect the solar inverter with a network cable to the USB ethernet adapter.
+- Connect the network port of the capture node (Raspberry Pi) with your home network / router.
+- Plug in the USB power adapter to boot the capture node.
+- After the boot sequence (typically ~45 sec), the capture node's LED indicator shows one of the states explained below.
+
+**LED indicator meanings**:
+- Red: No network link detected (solar inverter off / disconnected, network cable unplugged, USB ethernet adapter not connected) or the capture service is not running / crashed. Connecting the hardware or power-cycling should fix the issue.
 - Yellow: Capture node is ready to capture network traffic, but no packets were captured in the last 10 sec.
 - Green: A packet was captured in the last 10 sec.
 
