@@ -1,7 +1,13 @@
 # nta-pi-setup
 Configure a Raspberry Pi running Ubuntu 24.04 LTS as an IoT-device network-traffic capture node<br>
-Connection topology:<br>
-Solar inverter <---> USB Ethernet Adapter <-> Raspberry Pi <---> LAN / Router
+
+## Connection topology:<br>
+Solar inverter <---> USB Ethernet Adapter <-> Raspberry Pi <---> LAN / Router <br><br>
+
+LED indicator meanings:
+- Red: No ethernet cable connected or capture service is not running / crashed. Connecting the hardware or power-cycling should fix the issue.
+- Yellow: Capture node is ready to capture network traffic, but no packets were captured in the last 10 sec.
+- Green: A packet was captured in the last 10 sec.
 
 ## Autodeploy
 (currently only works on Linux)<br><br>
