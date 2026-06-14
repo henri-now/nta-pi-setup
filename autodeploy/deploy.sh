@@ -5,6 +5,7 @@
 # USAGE: install.sh TARGET [-i IMAGE] [-u FILE-USER-DATA] [-m FILE-META-DATA]
 # TARGET should be a block device
 # IMAGE is automatically downloaded if omitted
+# FILE-USER-DATA and FILE-META-DATA are taken from script directory if omitted
 # This is a fairly fragile script only expected to work with images of Ubuntu Server 24
 #####################################
 
@@ -49,10 +50,10 @@ if [ -z "$BOOTPART" ]; then
 fi
 TEMPDIR=$(mktemp -d)
 SCRIPTDIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-if [ -z "$USERFILE"]; then
+if [ -z "$USERFILE" ]; then
     USERFILE="${SCRIPTDIR}/user-data"
 fi
-if [ -z "$METAFILE"]; then
+if [ -z "$METAFILE" ]; then
     METAFILE="${SCRIPTDIR}/meta-data"
 fi
 
