@@ -4,8 +4,10 @@
 #   - captures on the given NIC (e.g. enx3c18a0d52e65)
 #   - all traffic, size-rotated at 50 MB/file, never overwritten
 #   - runs continuously, enabled at boot; idles when the cable is unplugged
-#   - each service start uses a unique base filename (epoch seconds), so a
+#   - each service start uses a unique base filename (timestamp), so a
 #     restart/reboot never reopens and truncates a previous file
+#   - writes the NIC name to /etc/default/capture as CAPTURE_NIC, the single
+#     source of truth shared with other services (e.g. the LED indicator)
 #
 # Storage management is handled by a separate script.
 #
@@ -13,55 +15,52 @@
 #   NIC   the NIC interface name (e.g. enx3c18a0d52e65 or eth1)
 #####################################
 set -euo pipefail
-
 if [ "$(id -u)" -ne 0 ]; then
     echo "ERROR: must run as root (use sudo)" >&2
     exit 1
 fi
-
 NIC="${1:-}"
 if [ -z "$NIC" ]; then
     echo "ERROR: no NIC specified" >&2
     echo "USAGE: sudo $0 NIC   (e.g. sudo $0 enx3c18a0d52e65)" >&2
     exit 1
 fi
-
 if ! command -v tcpdump >/dev/null 2>&1; then
     echo "tcpdump not found, installing..."
     apt-get update -qq && apt-get install -y tcpdump
 fi
-
 if ! ip link show "$NIC" >/dev/null 2>&1; then
     echo "WARNING: interface '$NIC' not currently present" >&2
 fi
-
 mkdir -p /var/captures
+
+# Single source of truth for the capture interface, shared by all services.
+echo "CAPTURE_NIC=${NIC}" > /etc/default/capture
 
 # Each run writes cap-YYYYMMDD-HHMMSS.pcap (+ counter suffixes from -C). Because the
 # base name is unique per start, a restart can never truncate a prior file.
-cat > /etc/systemd/system/capture.service <<EOF
+cat > /etc/systemd/system/capture.service <<UNIT
 [Unit]
 Description=tcpdump packet capture on ${NIC}
 After=network-online.target
 Wants=network-online.target
-
 [Service]
+EnvironmentFile=/etc/default/capture
 Type=exec
 ExecStartPre=/usr/bin/mkdir -p /var/captures
-ExecStart=/bin/sh -c '/usr/bin/tcpdump -i ${NIC} -n -C 50 -w /var/captures/cap-\$(date +%%Y%%m%%d-%%H%%M%%S).pcap -Z root'
+ExecStart=/bin/sh -c '/usr/bin/tcpdump -i \${CAPTURE_NIC} -n -C 50 -w /var/captures/cap-\$(date +%%Y%%m%%d-%%H%%M%%S).pcap -Z root'
 Restart=on-failure
 RestartSec=5
-
 [Install]
 WantedBy=multi-user.target
-EOF
+UNIT
 
 systemctl daemon-reload
-systemctl enable --now capture.service
-
+systemctl enable capture.service
+systemctl restart capture.service
 echo
 echo "Installed capture.service:"
-echo "  interface : ${NIC}"
+echo "  interface : ${NIC}  (stored in /etc/default/capture as CAPTURE_NIC)"
 echo "  files     : /var/captures/cap-YYYYMMDD-HHMMSS.pcap, 50 MB each, never overwritten"
 echo "  runs continuously, enabled at boot (idles when cable unplugged)"
 echo "  unique timestamped name per start -> restarts never truncate prior captures"

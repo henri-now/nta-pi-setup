@@ -34,7 +34,7 @@ Description=Run diskclean periodically
 
 [Timer]
 OnBootSec=5min
-OnUnitActiveSec=15min
+OnUnitActiveSec=5min
 
 [Install]
 WantedBy=timers.target
