@@ -26,6 +26,21 @@ Run `deploy.sh` (first, make deploy.sh executable, choose your image target):
 sudo chmod +x deploy.sh
 sudo ./deploy.sh /dev/sdd -u user-data
 ```
+### Problem with hanging systemd-networkd-wait-online.service
+Solution:
+```
+ethernets:
+    eth0:
+      dhcp4: no
+      dhcp6: no
+      optional: true
+    # Hard coded USB to Ethernet adapter, might change if different adapter is used
+    enx3c18a0d52e65:
+      dhcp4: no
+      dhcp6: no
+      optional: true
+```
+Set `optional: true` (in 99-bridge.yaml) so the service doesn't wait for the interface to come online.
 ## Services
 The capture nodes runs 3 services / timers:
 ```
