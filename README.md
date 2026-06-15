@@ -63,7 +63,7 @@ sudo tcpdump -i enx3c18a0d52e65 -n -q
 Delete pcap's:
 ```
 sudo systemctl stop capture.service
-sudo rm -rf ./*
+sudo rm -rf /var/captures/*
 sudo systemctl start capture.service
 ```
 
