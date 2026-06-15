@@ -40,7 +40,13 @@ ethernets:
       dhcp6: no
       optional: true
 ```
-Set `optional: true` (in 99-bridge.yaml) so the service doesn't wait for the interface to come online.
+Set `optional: true` (in 99-bridge.yaml) so the service doesn't wait for the interface to come online.<br>
+^^^ did nothing.
+```
+sudo systemctl disable systemd-networkd-wait-online.service
+sudo systemctl mask systemd-networkd-wait-online.service 
+```
+^^^ does work for now.
 ## Services
 The capture nodes runs 3 services / timers:
 ```
