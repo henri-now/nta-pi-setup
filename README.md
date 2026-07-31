@@ -29,24 +29,9 @@ sudo ./deploy.sh /dev/sdd -u user-data
 ### Problem with hanging systemd-networkd-wait-online.service
 Solution:
 ```
-ethernets:
-    eth0:
-      dhcp4: no
-      dhcp6: no
-      optional: true
-    # Hard coded USB to Ethernet adapter, might change if different adapter is used
-    enx3c18a0d52e65:
-      dhcp4: no
-      dhcp6: no
-      optional: true
-```
-Set `optional: true` (in 99-bridge.yaml) so the service doesn't wait for the interface to come online.<br>
-^^^ did nothing.
-```
 sudo systemctl disable systemd-networkd-wait-online.service
 sudo systemctl mask systemd-networkd-wait-online.service 
 ```
-^^^ does work for now.
 ## Services
 The capture nodes runs 3 services / timers:
 ```
@@ -89,6 +74,7 @@ sudo systemctl start capture.service
 ```
 
 ## Neopixel indicator
+(LED indicator is currently not part of the automatic setup, because the specific steps are specific to the used OS and hardware.)<br>
 Follow the setup: [NeoPixel setup notes](capture/neopixel-setup.md)
 
 Check if Neopixel LEDs are working:
