@@ -33,6 +33,16 @@ sudo systemctl disable systemd-networkd-wait-online.service
 sudo systemctl mask systemd-networkd-wait-online.service 
 ```
 ## Services
+### Installation
+```
+git clone https://github.com/henri-now/nta-pi-setup.git
+cd nta-pi-setup
+chmod +x install-*.sh
+sudo ./install-capture-service.sh
+sudo ./install-leds-service.sh
+sudo ./install-diskclean-service.sh
+```
+
 The capture nodes runs 3 services / timers:
 ```
 UNIT                 LOAD   ACTIVE SUB     DESCRIPTION
