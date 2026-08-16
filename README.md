@@ -84,7 +84,6 @@ sudo systemctl start capture.service
 ```
 
 ## Neopixel indicator
-(LED indicator is currently not part of the automatic setup, because the specific steps are specific to the used OS and hardware.)<br>
 Follow the setup: [NeoPixel setup notes](capture/neopixel-setup.md)
 
 Check if Neopixel LEDs are working:
